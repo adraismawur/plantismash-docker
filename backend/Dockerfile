@@ -56,22 +56,24 @@ RUN wget https://ccb.jhu.edu/software/glimmer/glimmer302b.tar.gz; \
     unzip master.zip; \
     mv plantismash-master plantismash; \ 
     cd plantismash; \
-    pip install -r requirements.txt
+    pip install -r requirements.txt; \
     cd /; \
     # dispatcher
     wget https://github.com/plantismash/dispatcher/archive/refs/heads/master.zip -O dispatcher.zip; \
     unzip dispatcher.zip; \
     mv dispatcher-master dispatcher; \
     cd dispatcher; \
-    pip install -r requirements.txt
+    pip install -r requirements.txt; \
+    # replace with old redis version
+    pip install redis==2.10.6 
 
 
-ENV PATH=/glimmer3.02/bin:/hmmer-2.3.2:/hmmer-3.1b2:/ncbi-blast-2.2.31+:/plantismash-master:$PATH
+ENV PATH=/glimmer3.02/bin:/hmmer-2.3.2:/hmmer-3.1b2:/ncbi-blast-2.2.31+:/plantismash:$PATH
 
 WORKDIR /dispatcher
 
 STOPSIGNAL SIGINT
 
-CMD python
+CMD runSMASH
 
 EXPOSE 8950
