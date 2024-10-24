@@ -13,6 +13,6 @@ WORKDIR /webserver
 
 STOPSIGNAL SIGINT
 
-CMD uwsgi --pythonpath /var/www --http :8950 --module websmash:app --uid 33 --gid 33 --touch-reload /tmp/reload_websmash --daemonize /var/log/uwsgi.log
+CMD uwsgi --pythonpath /var/www --http :8950 --module websmash:app --touch-reload /tmp/reload_websmash
 
 EXPOSE 8950
