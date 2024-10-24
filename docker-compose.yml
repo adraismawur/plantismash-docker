@@ -1,0 +1,18 @@
+services:
+  plantismash-web:
+    image: plantismash-web:latest
+
+    ports:
+      - 8950:8950
+
+    volumes:
+      - /local/data/plantismash:/data/plantismash
+  
+  plantismash-backend:
+    image: plantismash-backend:latest
+
+    ports: 
+      - 8951:8951
+
+    volumes:
+      - /local/data/plantismash:/data/plantismash
