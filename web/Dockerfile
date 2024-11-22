@@ -1,6 +1,6 @@
 FROM python:2.7
 
-RUN git clone https://github.com/plantismash/webserver.git; \
+RUN git clone git@github.com:adraismawur/plantismash-webserver.git; \
     cd webserver; \
     pip install -r requirements.txt; \
     pip install uwsgi
