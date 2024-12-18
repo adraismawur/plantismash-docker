@@ -110,7 +110,7 @@ RUN wget https://github.com/plantismash/dispatcher/archive/refs/heads/master.zip
 
 # replace with old redis version
 USER root
-RUN apt install redis
+RUN apt install -y redis
 USER $MAMBA_USER
 RUN pip install redis==2.10.6 
 
