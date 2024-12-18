@@ -109,11 +109,16 @@ RUN wget https://github.com/plantismash/dispatcher/archive/refs/heads/master.zip
     pip install -r requirements.txt;
 
 # replace with old redis version
+USER root
+RUN apt install redis
+USER $MAMBA_USER
 RUN pip install redis==2.10.6 
 
 # ENV PATH=/glimmer3.02/bin:/hmmer-2.3.2:/hmmer-3.1b2:/ncbi-blast-2.2.31+:/plantismash:$PATH
 
 WORKDIR /home/$MAMBA_USER/dispatcher
+
+RUN ln -s /home/$MAMBA_USER/plantismash/run_antismash.py /home/$MAMBA_USER/dispatcher/run_antismash.py
 
 STOPSIGNAL SIGINT
 
