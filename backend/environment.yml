@@ -1,0 +1,22 @@
+name: base
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=2.7
+  - glimmer
+  - glimmerhmm
+  - hmmer2
+  - hmmer=3.1b2
+  - fasttree=2.1.8
+  - diamond=0.8.9=boost1.60_1
+  - muscle=3.8.31
+  - prodigal
+  - blast=2.2.31
+  - cd-hit=4.6.6
+  - xz=5.2.2
+  - libxml2=2.9.3
+  - pplacer
+  - backports.lzma
+  - ncbi-datasets-cli
+  - unzip
