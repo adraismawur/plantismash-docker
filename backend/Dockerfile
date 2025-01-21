@@ -123,6 +123,6 @@ RUN ln -s /home/$MAMBA_USER/plantismash/run_antismash.py /home/$MAMBA_USER/dispa
 STOPSIGNAL SIGINT
 
 CMD redis-server --daemonize yes --port 8951 --protected-mode no; \
-    ./runSMASH -q redis://localhost:8951/0 --workdir /data/plantismash/upload --container
+    ./runSMASH -c 16 -q redis://localhost:8951/0 --workdir /data/plantismash/upload --container
 
 EXPOSE 8951
