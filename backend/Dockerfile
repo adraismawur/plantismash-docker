@@ -1,5 +1,33 @@
 FROM mambaorg/micromamba
 
+
+ARG NEW_MAMBA_USER=drais008
+ARG NEW_MAMBA_USER_ID=17504506
+ARG NEW_MAMBA_USER_GID=16777729
+USER root
+
+RUN if grep -q '^ID=alpine$' /etc/os-release; then \
+      # alpine does not have usermod/groupmod
+      apk add --no-cache --virtual temp-packages shadow; \
+    fi && \
+    usermod "--login=${NEW_MAMBA_USER}" "--home=/home/${NEW_MAMBA_USER}" \
+        --move-home "-u ${NEW_MAMBA_USER_ID}" "${MAMBA_USER}" && \
+    groupmod "--new-name=${NEW_MAMBA_USER}" \
+        "-g ${NEW_MAMBA_USER_GID}" "${MAMBA_USER}" && \
+    if grep -q '^ID=alpine$' /etc/os-release; then \
+      # remove the packages that were only needed for usermod/groupmod
+      apk del temp-packages; \
+    fi && \
+    # Update the expected value of MAMBA_USER for the
+    # _entrypoint.sh consistency check.
+    echo "${NEW_MAMBA_USER}" > "/etc/arg_mamba_user" && \
+    :
+ENV MAMBA_USER=$NEW_MAMBA_USER
+
+USER $MAMBA_USER
+
+
+
 WORKDIR /home/$MAMBA_USER
 
 USER root
@@ -14,7 +42,7 @@ RUN apt install -y gcc
 
 USER $MAMBA_USER
 
-RUN micromamba install -y -n base -f /home/$MAMBA_USER/environment.yml && \
+RUN micromamba install -y -v -n base -f /home/$MAMBA_USER/environment.yml && \
     micromamba clean --all --yes
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
@@ -86,16 +114,16 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 
 # code
-RUN wget https://github.com/plantismash/plantismash/archive/refs/tags/2.0-beta2.zip; \
-    unzip 2.0-beta2.zip; \
-    mv plantismash-2.0-beta2 plantismash; \ 
+RUN wget https://github.com/plantismash/plantismash/archive/refs/tags/2.0-beta3.zip; \
+    unzip 2.0-beta3.zip; \
+    mv plantismash-2.0-beta3 plantismash; \ 
     cd plantismash;
 
 WORKDIR /home/$MAMBA_USER/plantismash
 
 RUN pip install -r requirements.txt
 RUN pip install graphlan
-RUN python download_databases.py;
+RUN python download_databases.py
 
 # clusterblast. TODO: remove once this is integrated into clusterblast itself
 
@@ -118,11 +146,10 @@ RUN pip install redis==2.10.6
 
 WORKDIR /home/$MAMBA_USER/dispatcher
 
-RUN ln -s /home/$MAMBA_USER/plantismash/run_antismash.py /home/$MAMBA_USER/dispatcher/run_antismash.py
-
 STOPSIGNAL SIGINT
 
 CMD redis-server --daemonize yes --port 8951 --protected-mode no; \
-    ./runSMASH -c 16 -q redis://localhost:8951/0 --workdir /data/plantismash/upload --container
+    ./runSMASH -c 16 -q redis://localhost:8951/0 --workdir /data/plantismash/upload --container \
+    --script /home/$MAMBA_USER/plantismash/run_antismash.py
 
 EXPOSE 8951
