@@ -130,9 +130,9 @@ RUN python download_databases.py
 WORKDIR /home/$MAMBA_USER
 
 # dispatcher
-RUN wget https://github.com/plantismash/dispatcher/archive/refs/heads/master.zip -O dispatcher.zip; \
+RUN wget https://github.com/plantismash/dispatcher/archive/refs/heads/dev.zip -O dispatcher.zip; \
     unzip dispatcher.zip; \
-    mv dispatcher-master dispatcher; \
+    mv dispatcher-dev dispatcher; \
     cd dispatcher; \
     pip install -r requirements.txt;
 
