@@ -1,9 +1,9 @@
 FROM mambaorg/micromamba
 
 
-ARG NEW_MAMBA_USER=drais008
-ARG NEW_MAMBA_USER_ID=17504506
-ARG NEW_MAMBA_USER_GID=16777729
+ARG NEW_MAMBA_USER=plantismash
+ARG NEW_MAMBA_USER_ID=1002
+ARG NEW_MAMBA_USER_GID=1004
 USER root
 
 RUN if grep -q '^ID=alpine$' /etc/os-release; then \
@@ -114,33 +114,34 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 
 # code
-RUN wget https://github.com/plantismash/plantismash/archive/refs/tags/2.0-beta3.zip; \
-    unzip 2.0-beta3.zip; \
-    mv plantismash-2.0-beta3 plantismash; \ 
+RUN wget https://github.com/plantismash/plantismash/archive/refs/tags/2.0-beta4.zip; \
+    unzip 2.0-beta4.zip; \
+    mv plantismash-2.0-beta4 plantismash; \ 
     cd plantismash;
 
 WORKDIR /home/$MAMBA_USER/plantismash
 
 RUN pip install -r requirements.txt
-RUN pip install graphlan
+#RUN pip install ./graphlan
 RUN python download_databases.py
 
 # clusterblast. TODO: remove once this is integrated into clusterblast itself
 
 WORKDIR /home/$MAMBA_USER
 
-# dispatcher
-RUN wget https://github.com/plantismash/dispatcher/archive/refs/heads/dev.zip -O dispatcher.zip; \
+# dispatcher mail
+RUN echo temp
+RUN wget https://github.com/plantismash/dispatcher/archive/feature/telnet-mail-service.zip -O dispatcher.zip; \
     unzip dispatcher.zip; \
-    mv dispatcher-dev dispatcher; \
+    mv dispatcher-feature-telnet-mail-service dispatcher; \
     cd dispatcher; \
     pip install -r requirements.txt;
 
 # replace with old redis version
-USER root
-RUN apt install -y redis
-USER $MAMBA_USER
-RUN pip install redis==2.10.6 
+#USER root
+#RUN apt install -y redis
+#USER $MAMBA_USER
+#RUN pip install redis==2.10.6 
 
 # ENV PATH=/glimmer3.02/bin:/hmmer-2.3.2:/hmmer-3.1b2:/ncbi-blast-2.2.31+:/plantismash:$PATH
 

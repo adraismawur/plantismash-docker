@@ -1,3 +1,4 @@
+#!/bin/bash
 source .envs
 
 echo "Running job count update script"
@@ -17,4 +18,4 @@ echo echo "Recreating containers"
 docker-compose create
 
 echo "restarting containers"
-./start.sh
+docker-compose start
